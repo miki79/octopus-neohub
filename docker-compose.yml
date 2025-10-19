@@ -2,6 +2,7 @@ version: "3.9"
 services:
   agile-thermostat:
     build: .
+    network_mode: host
     container_name: agile-thermostat
     restart: unless-stopped
     env_file:
