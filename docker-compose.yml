@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  agile-thermostat:
+    build: .
+    container_name: agile-thermostat
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${DASHBOARD_PORT}:8080"
