@@ -1,9 +1,11 @@
-#import requests
+import logging
 import neohubapi.neohub as neohub
 from .config import Config
 
 _TRUE_STRINGS = {"TRUE", "ON", "1", "ACTIVE", "HOLD", "ENABLED", "YES"}
 _FALSE_STRINGS = {"FALSE", "OFF", "0", "INACTIVE", "NONE", ""}
+
+logger = logging.getLogger(__name__)
 
 
 def _coerce_bool(value):
@@ -22,7 +24,7 @@ async def get_device_status(device_name):
     devices = hub_data['neo_devices']
     for device in devices:
         if device.name == device_name:
-            print(f"Temperature in zone {device.name}: {device.temperature}")            
+            logger.info("Temperature in zone %s: %s", device.name, device.temperature)
             device_data = {
                 "is_hold": device.hold_on,
                 "current": device.temperature,

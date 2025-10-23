@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import threading
 from flask import Flask, jsonify, render_template
 from .control import state, control_loop
@@ -15,6 +16,12 @@ def json_view():
     return jsonify(state)
 
 def start():
+    if not logging.getLogger().hasHandlers():
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s %(levelname)s [%(name)s] %(message)s"
+        )
+
     def run_control_loop():
         asyncio.run(control_loop())
 

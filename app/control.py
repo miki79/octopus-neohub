@@ -1,8 +1,11 @@
+import logging
 import time, datetime
 from .config import Config
 from .octopus_api import get_current_price
 from .neohub_api import get_device_status, set_temperature
 from .logic import should_preheat, decide_temperature
+
+logger = logging.getLogger(__name__)
 
 state = {
     "last_temp": None,
@@ -28,10 +31,10 @@ async def control_loop():
 
             if device_info["standby"]:
                 msg = "Thermostat in standby — skipping update."
-                print(msg)
+                logger.info(msg)
             elif device_info["is_hold"]:
                 msg = "Manual override active — skipping update."
-                print(msg)
+                logger.info(msg)
             else:
                 new_temp = decide_temperature(price, state["last_temp"], state["last_price"], preheat)
                 if new_temp != state["last_temp"]:
@@ -40,7 +43,7 @@ async def control_loop():
                     state["last_temp"] = new_temp
                 else:
                     msg = f"Price {price:.2f}p → hold {state['last_temp']}°C"
-                print(msg)
+                logger.info(msg)
 
             state.update({
                 "status": msg,
@@ -51,7 +54,7 @@ async def control_loop():
 
         except Exception as e:
             msg = f"Error: {e}"
-            print(msg)
+            logger.exception(msg)
             state["status"] = msg
 
         time.sleep(Config.INTERVAL)
