@@ -1,4 +1,5 @@
 import datetime
+from zoneinfo import ZoneInfo
 from .config import Config
 from .octopus_api import get_forecast_prices, get_current_price
 
@@ -43,6 +44,12 @@ def decide_temperature(price, last_temp, last_price, preheat_active):
         target = Config.TEMP_MID_2
     else:
         target = Config.TEMP_LOW
+
+    now_uk = datetime.datetime.now(ZoneInfo("Europe/London"))
+    current_time = now_uk.time()
+    quiet_hours = current_time >= datetime.time(22, 30) or current_time < datetime.time(4, 0)
+    if quiet_hours and target > Config.TEMP_MID:
+        target = Config.TEMP_MID
 
     # Apply hysteresis
     if last_temp is not None and abs(target - last_temp) < Config.TEMP_HYSTERESIS:

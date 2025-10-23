@@ -24,7 +24,7 @@ async def get_device_status(device_name):
         if device.name == device_name:
             print(f"Temperature in zone {device.name}: {device.temperature}")            
             device_data = {
-                "is_hold": False, #TODO
+                "is_hold": device.hold_on,
                 "current": device.temperature,
                 "target": device.target_temperature,
                 "standby": device.standby

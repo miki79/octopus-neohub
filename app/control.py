@@ -12,6 +12,7 @@ state = {
     "status": "Starting...",
     "preheat_active": False,
     "last_update": None,
+    "current_temp": None
 }
 
 async def control_loop():
@@ -22,6 +23,7 @@ async def control_loop():
 
             state["manual_override"] = device_info["is_hold"]
             state["standby"] = device_info["standby"]
+            state["current_temp"] = device_info["current"]
             preheat = should_preheat()
 
             if device_info["standby"]:
@@ -44,7 +46,7 @@ async def control_loop():
                 "status": msg,
                 "last_update": datetime.datetime.now(),
                 "last_price": price,
-                "preheat_active": preheat,
+                "preheat_active": preheat
             })
 
         except Exception as e:
