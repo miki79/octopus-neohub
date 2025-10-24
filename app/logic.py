@@ -57,4 +57,7 @@ def decide_temperature(price, last_temp, last_price, preheat_active):
     if last_price is not None and abs(price - last_price) < Config.PRICE_HYSTERESIS:
         target = last_temp or target
 
+    if price < 0:
+        target = Config.TEMP_HIGH
+
     return target
