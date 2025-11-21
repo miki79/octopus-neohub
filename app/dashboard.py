@@ -26,4 +26,6 @@ def start():
         asyncio.run(control_loop())
 
     threading.Thread(target=run_control_loop, daemon=True).start()
-    app.run(host="0.0.0.0", port=Config.DASHBOARD_PORT)
+    
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=Config.DASHBOARD_PORT)

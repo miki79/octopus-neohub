@@ -27,3 +27,6 @@ class Config:
     PREHEAT_LOOKAHEAD_HOURS = float(os.getenv("PREHEAT_LOOKAHEAD_HOURS", 2))
     PREHEAT_THRESHOLD = float(os.getenv("PREHEAT_THRESHOLD", 18))
     PREHEAT_FORECAST_WINDOW = float(os.getenv("PREHEAT_FORECAST_WINDOW", 6))
+
+    QUIET_START = os.getenv("QUIET_START", "22:30")
+    QUIET_END = os.getenv("QUIET_END", "04:00")

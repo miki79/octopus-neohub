@@ -3,3 +3,5 @@ python-dotenv
 flask
 neohubapi
 asyncio
+aiohttp
+waitress

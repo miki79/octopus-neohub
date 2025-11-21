@@ -1,5 +1,6 @@
 import logging
-import time, datetime
+import asyncio
+import datetime
 from .config import Config
 from .octopus_api import get_current_price
 from .neohub_api import get_device_status, set_temperature
@@ -19,15 +20,17 @@ state = {
 }
 
 async def control_loop():
+    logger.info("Starting async control loop")
     while True:
         try:
-            price = get_current_price()
+            price = await get_current_price()
             device_info, device = await get_device_status(Config.DEVICE_NAME)
 
             state["manual_override"] = device_info["is_hold"]
             state["standby"] = device_info["standby"]
             state["current_temp"] = device_info["current"]
-            preheat = should_preheat()
+            
+            preheat = await should_preheat(price)
 
             if device_info["standby"]:
                 msg = "Thermostat in standby — skipping update."
@@ -57,4 +60,4 @@ async def control_loop():
             logger.exception(msg)
             state["status"] = msg
 
-        time.sleep(Config.INTERVAL)
+        await asyncio.sleep(Config.INTERVAL)
